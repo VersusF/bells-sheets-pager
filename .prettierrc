@@ -1,0 +1,10 @@
+{
+    "useTabs": false,
+    "singleQuote": false,
+    "trailingComma": "all",
+    "tabWidth": 4,
+    "printWidth": 100,
+    "plugins": ["prettier-plugin-svelte", "@typescript-eslint/eslint-plugin"],
+    "pluginSearchDirs": ["."],
+    "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
+}
