@@ -1,5 +1,9 @@
 <script>
+    import { sheetToPage } from "../lib/pager";
     let rawInput = "";
+    const click = () => {
+        sheetToPage(rawInput);
+    };
 </script>
 
 <div class="background">
@@ -15,7 +19,7 @@
             class="textInput"
             placeholder="1,2,3/1,4/2,5/3/1,..."
         />
-        <input type="button" value="Impagina" class="cta-button" />
+        <input on:click={click} type="button" value="Impagina" class="cta-button" />
     </div>
 </div>
 
