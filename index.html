@@ -18,40 +18,53 @@
             }
         </style>
         <meta http-equiv="content-security-policy" content="">
-		<link href="/bells-sheets-pager/internal/immutable/assets/_page-613182c9.css" rel="stylesheet">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/start-b799e994.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/index-cdb4327e.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/singletons-a73f5014.js">
+		<link href="/bells-sheets-pager/internal/immutable/assets/_page-2cef2450.css" rel="stylesheet">
+		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/start-aebc1ea1.js">
+		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/index-64ad735e.js">
+		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/singletons-134d26fe.js">
 		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/shared-23917130.js">
 		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/preload-helper-41c905a7.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/components/layout.svelte-e921b5ba.js">
+		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/components/layout.svelte-f9905d81.js">
 		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/modules/pages/_layout.ts-9cbb603b.js">
 		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/_layout-da46b06b.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/components/pages/_page.svelte-3e7a6290.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/_page-2e0f54b0.js">
+		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/components/pages/_page.svelte-3c882b4a.js">
+		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/_page-776b9608.js">
     </head>
     <body data-sveltekit-preload-data="hover" style="margin: 0">
         <div style="display: contents">
 
 
-<div class="background svelte-1ilkyd4"><h1 class="title svelte-1ilkyd4">Impaginatore Spartiti Campane a Sistema Veronese</h1>
-    <div class="form svelte-1ilkyd4"><div class="title-form note-input svelte-1ilkyd4"><label for="title">Titolo</label>
-            <input type="text" name="title" id="input-title" value=""></div>
-        <div class="author-form note-input svelte-1ilkyd4"><label for="author">Autore/sottotitolo</label>
-            <input type="text" name="author" id="input-author" value=""></div>
-        <textarea name="raw" id="input-raw" rows="10" class="textInput svelte-1ilkyd4" placeholder="1,2,3/1,4/2,5/3/1,..."></textarea>
-        <input type="button" value="Impagina" class="cta-button svelte-1ilkyd4"></div>
+<div class="background svelte-pna1l9"><h1 class="title svelte-pna1l9">Impaginatore Spartiti Campane a Sistema Veronese</h1>
+    <div class="form svelte-pna1l9"><div class="bsp-input svelte-pna1l9"><label for="title">Titolo</label>
+            <input type="text" name="title" id="input-title" class="text-input svelte-pna1l9" value=""></div>
+        <div class="bsp-input svelte-pna1l9"><label for="author">Autore/sottotitolo</label>
+            <input type="text" name="author" id="input-author" class="text-input svelte-pna1l9" value=""></div>
+        <textarea name="raw" id="input-raw" rows="10" class="raw-textarea svelte-pna1l9" placeholder="1,2,3/1,4/2,5/3/1,..."></textarea>
+        <input type="button" value="Impagina" class="cta-button svelte-pna1l9">
+        <div class="bsp-input settings svelte-pna1l9"><button class="settings-btn svelte-m2z3w3">⚙ Impostazioni</button>
+<div class="settings-form form-hide svelte-m2z3w3"><div class="setting-input-div svelte-m2z3w3"><label for="author">Numero di colonne</label>
+        <input type="number" name="columns" id="input-columns" min="7" max="15" step="1" class="svelte-m2z3w3" value="13"></div>
+    <div class="setting-input-div svelte-m2z3w3"><label for="author">Spazio sui ritorni</label>
+        <input type="checkbox" name="returnSpacing" id="input-returnSpacing" class="svelte-m2z3w3" checked></div>
+    <div class="setting-input-div svelte-m2z3w3"><label for="author">Colori righe alternati</label>
+        <input type="checkbox" name="bicolorRows" id="input-bicolorRows" class="svelte-m2z3w3" checked></div>
+    <div class="setting-input-div svelte-m2z3w3"><label for="author">Colore ritorni</label>
+        <input type="color" name="returnColor" id="input-returnColor" class="svelte-m2z3w3" value="#ff9d9d"></div>
+    <div class="setting-input-div svelte-m2z3w3"><label for="author">Colore pause</label>
+        <input type="color" name="pauseColor" id="input-pauseColor" class="svelte-m2z3w3" value="#b5ffb5"></div>
+    <button class="settings-btn svelte-m2z3w3">⟲ Ripristina</button>
+</div></div></div>
 </div>
 
 
-		<script type="module" data-sveltekit-hydrate="jhmjw">
-			import { start } from "/bells-sheets-pager/internal/immutable/start-b799e994.js";
+		<script type="module" data-sveltekit-hydrate="17n238m">
+			import { start } from "/bells-sheets-pager/internal/immutable/start-aebc1ea1.js";
 
 			start({
 				env: {},
 				paths: {"assets":"/bells-sheets-pager","base":"/bells-sheets-pager"},
-				target: document.querySelector('[data-sveltekit-hydrate="jhmjw"]').parentNode,
-				version: "1675695197350",
+				target: document.querySelector('[data-sveltekit-hydrate="17n238m"]').parentNode,
+				version: "1675722807746",
 				hydrate: {
 					node_ids: [0, 2],
 					data: [null,null],
