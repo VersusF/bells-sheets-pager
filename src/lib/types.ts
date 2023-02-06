@@ -11,11 +11,11 @@ export class UserInput {
 }
 
 export class UserSettings {
-    columns: number;
-    bicolorRows: boolean;
-    returnSpacing: boolean;
-    returnColor: string;
-    pauseColor: string;
+    public columns: number;
+    public bicolorRows: boolean;
+    public returnSpacing: boolean;
+    public returnColor: string;
+    public pauseColor: string;
 
     constructor() {
         this.columns = 13;

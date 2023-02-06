@@ -1,33 +1,50 @@
 <script>
-    import { UserInput } from "$lib/types";
+    import Settings from "$lib/Settings.svelte";
+    import { UserInput, UserSettings } from "$lib/types";
     import { sheetToPage } from "../lib/pager";
 
     const userInput = new UserInput();
+    const settings = new UserSettings();
     const click = () => {
-        sheetToPage(userInput);
+        sheetToPage(userInput, settings);
     };
 </script>
 
 <div class="background">
     <h1 class="title">Impaginatore Spartiti Campane a Sistema Veronese</h1>
     <div class="form">
-        <div class="title-form note-input">
+        <div class="bsp-input">
             <label for="title">Titolo</label>
-            <input bind:value={userInput.title} type="text" name="title" id="input-title" />
+            <input
+                bind:value={userInput.title}
+                type="text"
+                name="title"
+                id="input-title"
+                class="text-input"
+            />
         </div>
-        <div class="author-form note-input">
+        <div class="bsp-input">
             <label for="author">Autore/sottotitolo</label>
-            <input bind:value={userInput.author} type="text" name="author" id="input-author" />
+            <input
+                bind:value={userInput.author}
+                type="text"
+                name="author"
+                id="input-author"
+                class="text-input"
+            />
         </div>
         <textarea
             bind:value={userInput.raw}
             name="raw"
             id="input-raw"
             rows="10"
-            class="textInput"
+            class="raw-textarea"
             placeholder="1,2,3/1,4/2,5/3/1,..."
         />
         <input on:click={click} type="button" value="Impagina" class="cta-button" />
+        <div class="bsp-input settings">
+            <Settings {settings} />
+        </div>
     </div>
 </div>
 
@@ -37,7 +54,7 @@
         width: 100vw;
         height: 100vh;
         background-color: var(--bg-color);
-        overflow: hidden;
+        overflow: scroll;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -50,15 +67,22 @@
         width: 100%;
         row-gap: 1em;
     }
-    .note-input {
+    .bsp-input {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
     }
+    .settings {
+        width: 80%;
+        max-width: 300px;
+    }
     .title {
         text-align: center;
     }
-    .textInput {
+    .text-input {
+        outline: none;
+    }
+    .raw-textarea {
         color: var(--bg-color);
         background-color: var(--text-color);
         outline: none;

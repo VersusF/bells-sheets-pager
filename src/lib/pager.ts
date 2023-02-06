@@ -1,8 +1,6 @@
 import { base } from "$app/paths";
 import jsPDF from "jspdf";
-import type { UserInput } from "./types";
-
-const ROW_NOTES = 13;
+import type { UserInput, UserSettings } from "./types";
 
 /**
  * Converts the user input into an array of cells, each one representing a musical stroke
@@ -37,27 +35,31 @@ function computeCells(raw: string) {
     return cells;
 }
 
-async function populateTemplate(userInput: UserInput, cells: string[]) {
+async function populateTemplate(userInput: UserInput, cells: string[], settings: UserSettings) {
     const res = await fetch(base + "/templates/sheet-template.html");
     const template = await res.text();
     let tableCells = "";
     let buffer = "";
-    let oddRow = false;
+    let oddRow = true;
     const printRow = () => {
-        const color = oddRow ? "#fff" : "#eee";
+        const color = oddRow && settings.bicolorRows ? "#eee" : "#fff";
         tableCells += `<tr style="background-color: ${color};">${buffer}</tr>`;
         buffer = "";
         oddRow = !oddRow;
     };
     let i = 0;
     for (const cell of cells) {
-        if (i > 0 && i % ROW_NOTES === 0) {
+        if (i > 0 && i % settings.columns === 0) {
             printRow();
         }
         if (cell === "P") {
-            buffer += '<td style="background-color: #b5ffb5">P</td>';
+            buffer += `<td style="background-color: ${settings.pauseColor}">P</td>`;
         } else if (cell === "") {
-            buffer += '<td style="background-color: #ff9d9d"></td>';
+            if (settings.returnSpacing) {
+                buffer += `<td style="background-color: ${settings.returnColor}"></td>`;
+            } else {
+                i--;
+            }
         } else if (cell.length > 5) {
             buffer += `<td colspan="2">${cell}</td>`;
             i++;
@@ -71,7 +73,7 @@ async function populateTemplate(userInput: UserInput, cells: string[]) {
     const sheet = template
         .replace(/%TITLE%/g, userInput.title)
         .replace("%AUTHOR%", userInput.author)
-        .replace("%ROW_NUMBER%", Math.ceil(cells.length / ROW_NOTES).toString())
+        .replace("%ROW_NUMBER%", Math.ceil(cells.length / settings.columns).toString())
         .replace("%NOTES_COUNT%", cells.filter((c) => c && c != "P").length.toString())
         .replace("%CELLS%", tableCells);
 
@@ -94,8 +96,8 @@ function exportPdf(html: string) {
     });
 }
 
-export async function sheetToPage(userInput: UserInput) {
+export async function sheetToPage(userInput: UserInput, settings: UserSettings) {
     const cells = computeCells(userInput.raw);
-    const html = await populateTemplate(userInput, cells);
+    const html = await populateTemplate(userInput, cells, settings);
     exportPdf(html);
 }
