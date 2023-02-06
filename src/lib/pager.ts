@@ -1,3 +1,4 @@
+import { base } from "$app/paths";
 import jsPDF from "jspdf";
 
 const ROW_NOTES = 13;
@@ -36,7 +37,7 @@ function parseRawInput(raw: string) {
 }
 
 async function populateTemplate(title: string, author: string, cells: string[]) {
-    const res = await fetch("/templates/sheet-template.html");
+    const res = await fetch(base + "/templates/sheet-template.html");
     const template = await res.text();
     let tableCells = "";
     let buffer = "";
