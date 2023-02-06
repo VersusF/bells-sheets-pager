@@ -1,3 +1,7 @@
+import jsPDF from "jspdf";
+
+const ROW_NOTES = 13;
+
 /**
  * Converts the user input into an array of cells, each one representing a musical stroke
  * @param raw
@@ -31,7 +35,62 @@ function parseRawInput(raw: string) {
     return cells;
 }
 
-export function sheetToPage(raw: string) {
+async function populateTemplate(cells: string[]) {
+    const res = await fetch("/templates/sheet-template.html");
+    const template = await res.text();
+    let tableCells = "";
+    let buffer = "";
+    let oddRow = false;
+    const printRow = () => {
+        const color = oddRow ? "#fff" : "#eee";
+        tableCells += `<tr style="background-color: ${color};">${buffer}</tr>`;
+        buffer = "";
+        oddRow = !oddRow;
+    };
+    let i = 0;
+    for (const cell of cells) {
+        if (i > 0 && i % ROW_NOTES === 0) {
+            printRow();
+        }
+        if (cell === "P") {
+            buffer += '<td style="background-color: #66ff66">P</td>';
+        } else if (cell === "") {
+            buffer += '<td style="background-color: #ff9d9d"></td>';
+        } else if (cell.length > 5) {
+            buffer += `<td colspan="2">${cell}</td>`;
+            i++;
+        } else {
+            buffer += `<td>${cell}</td>`;
+        }
+        i++;
+    }
+    printRow();
+
+    const sheet = template
+        .replace("%ROW_NUMBER%", Math.ceil(cells.length / ROW_NOTES).toString())
+        .replace("%CELLS%", tableCells);
+
+    return sheet;
+}
+
+function exportPdf(html: string) {
+    const doc = new jsPDF({
+        orientation: "p",
+        unit: "mm",
+        format: "a4",
+    });
+    doc.html(html, {
+        callback: () => {
+            doc.save("sheet.pdf");
+        },
+        width: 211,
+        windowWidth: 800,
+        margin: [15, 10, 10, 10],
+    });
+}
+
+export async function sheetToPage(raw: string) {
     const cells = parseRawInput(raw);
-    console.log(cells);
+    const html = await populateTemplate(cells);
+    exportPdf(html);
 }

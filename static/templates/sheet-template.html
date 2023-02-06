@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>%TITLE%</title>
+    </head>
+    <body
+        style="
+            width: 190mm;
+            height: 278mm;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        "
+    >
+        <div style="width: 190mm; --row-count: %ROW_NUMBER%">
+            <h1 style="text-align: center; color: #000">%TITLE%</h1>
+            <h3 style="text-align: center; color: #000">%AUTHOR%</h3>
+            <table
+                style="
+                    width: 190mm;
+                    height: calc(min(190mm, 53px * var(--row-count, 2)));
+                    table-layout: fixed;
+                    text-align: center;
+                    border: 1px solid #ccc;
+                    color: #000;
+                    font-size: 14pt;
+                    overflow-wrap: break-word;
+                    border-collapse: collapse;
+                "
+            >
+                %CELLS%
+            </table>
+        </div>
+    </body>
+</html>
