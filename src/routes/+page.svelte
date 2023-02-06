@@ -1,16 +1,24 @@
 <script>
     import { sheetToPage } from "../lib/pager";
     let rawInput = "";
+    let title = "";
+    let author = "";
     const click = () => {
-        sheetToPage(rawInput);
+        sheetToPage(title.trim(), author.trim(), rawInput);
     };
 </script>
 
 <div class="background">
     <h1 class="title">Impaginatore Spartiti Campane a Sistema Veronese</h1>
     <div class="form">
-        <!-- TODO: Title -->
-        <!-- TODO: Author -->
+        <div class="title-form note-input">
+            <label for="title">Titolo</label>
+            <input bind:value={title} type="text" name="title" id="input-title" />
+        </div>
+        <div class="author-form note-input">
+            <label for="author">Autore/sottotitolo</label>
+            <input bind:value={author} type="text" name="author" id="input-author" />
+        </div>
         <textarea
             bind:value={rawInput}
             name="raw"
@@ -40,6 +48,12 @@
         align-items: center;
         max-width: 80vw;
         width: 100%;
+        row-gap: 1em;
+    }
+    .note-input {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
     .title {
         text-align: center;

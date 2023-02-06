@@ -35,7 +35,7 @@ function parseRawInput(raw: string) {
     return cells;
 }
 
-async function populateTemplate(cells: string[]) {
+async function populateTemplate(title: string, author: string, cells: string[]) {
     const res = await fetch("/templates/sheet-template.html");
     const template = await res.text();
     let tableCells = "";
@@ -53,7 +53,7 @@ async function populateTemplate(cells: string[]) {
             printRow();
         }
         if (cell === "P") {
-            buffer += '<td style="background-color: #66ff66">P</td>';
+            buffer += '<td style="background-color: #b5ffb5">P</td>';
         } else if (cell === "") {
             buffer += '<td style="background-color: #ff9d9d"></td>';
         } else if (cell.length > 5) {
@@ -67,6 +67,8 @@ async function populateTemplate(cells: string[]) {
     printRow();
 
     const sheet = template
+        .replace(/%TITLE%/g, title)
+        .replace("%AUTHOR%", author)
         .replace("%ROW_NUMBER%", Math.ceil(cells.length / ROW_NOTES).toString())
         .replace("%CELLS%", tableCells);
 
@@ -89,8 +91,8 @@ function exportPdf(html: string) {
     });
 }
 
-export async function sheetToPage(raw: string) {
+export async function sheetToPage(title: string, author: string, raw: string) {
     const cells = parseRawInput(raw);
-    const html = await populateTemplate(cells);
+    const html = await populateTemplate(title, author, cells);
     exportPdf(html);
 }
