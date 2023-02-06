@@ -1,5 +1,6 @@
 import { base } from "$app/paths";
 import jsPDF from "jspdf";
+import type { UserInput } from "./types";
 
 const ROW_NOTES = 13;
 
@@ -8,7 +9,7 @@ const ROW_NOTES = 13;
  * @param raw
  * @returns
  */
-function parseRawInput(raw: string) {
+function computeCells(raw: string) {
     const filtered = raw
         .toUpperCase()
         .trim()
@@ -36,7 +37,7 @@ function parseRawInput(raw: string) {
     return cells;
 }
 
-async function populateTemplate(title: string, author: string, cells: string[]) {
+async function populateTemplate(userInput: UserInput, cells: string[]) {
     const res = await fetch(base + "/templates/sheet-template.html");
     const template = await res.text();
     let tableCells = "";
@@ -68,9 +69,10 @@ async function populateTemplate(title: string, author: string, cells: string[]) 
     printRow();
 
     const sheet = template
-        .replace(/%TITLE%/g, title)
-        .replace("%AUTHOR%", author)
+        .replace(/%TITLE%/g, userInput.title)
+        .replace("%AUTHOR%", userInput.author)
         .replace("%ROW_NUMBER%", Math.ceil(cells.length / ROW_NOTES).toString())
+        .replace("%NOTES_COUNT%", cells.filter((c) => c && c != "P").length.toString())
         .replace("%CELLS%", tableCells);
 
     return sheet;
@@ -92,8 +94,8 @@ function exportPdf(html: string) {
     });
 }
 
-export async function sheetToPage(title: string, author: string, raw: string) {
-    const cells = parseRawInput(raw);
-    const html = await populateTemplate(title, author, cells);
+export async function sheetToPage(userInput: UserInput) {
+    const cells = computeCells(userInput.raw);
+    const html = await populateTemplate(userInput, cells);
     exportPdf(html);
 }

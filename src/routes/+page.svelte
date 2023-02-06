@@ -1,10 +1,10 @@
 <script>
+    import { UserInput } from "$lib/types";
     import { sheetToPage } from "../lib/pager";
-    let rawInput = "";
-    let title = "";
-    let author = "";
+
+    const userInput = new UserInput();
     const click = () => {
-        sheetToPage(title.trim(), author.trim(), rawInput);
+        sheetToPage(userInput);
     };
 </script>
 
@@ -13,14 +13,14 @@
     <div class="form">
         <div class="title-form note-input">
             <label for="title">Titolo</label>
-            <input bind:value={title} type="text" name="title" id="input-title" />
+            <input bind:value={userInput.title} type="text" name="title" id="input-title" />
         </div>
         <div class="author-form note-input">
             <label for="author">Autore/sottotitolo</label>
-            <input bind:value={author} type="text" name="author" id="input-author" />
+            <input bind:value={userInput.author} type="text" name="author" id="input-author" />
         </div>
         <textarea
-            bind:value={rawInput}
+            bind:value={userInput.raw}
             name="raw"
             id="input-raw"
             rows="10"
