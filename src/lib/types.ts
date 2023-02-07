@@ -29,3 +29,26 @@ export class UserSettings {
         this.pauseColorTransparent = false;
     }
 }
+
+export class SheetStats {
+    public noteCount: Record<string, number>;
+
+    constructor() {
+        this.noteCount = {};
+    }
+
+    public static from(cells: string[]) {
+        const stats = new SheetStats();
+        for (const cell of cells) {
+            for (const note of cell.split("/")) {
+                if (note && note != "P") {
+                    if (!stats.noteCount[note]) {
+                        stats.noteCount[note] = 0;
+                    }
+                    stats.noteCount[note]++;
+                }
+            }
+        }
+        return stats;
+    }
+}

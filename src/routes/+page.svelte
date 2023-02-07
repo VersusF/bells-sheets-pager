@@ -1,12 +1,15 @@
-<script>
+<script lang="ts">
     import Settings from "$lib/Settings.svelte";
-    import { UserInput, UserSettings } from "$lib/types";
+    import Stats from "$lib/Stats.svelte";
+    import { SheetStats, UserInput, UserSettings } from "$lib/types";
     import { sheetToPage } from "../lib/pager";
 
     const userInput = new UserInput();
     const settings = new UserSettings();
-    const click = () => {
-        sheetToPage(userInput, settings);
+    let stats: SheetStats;
+    const click = async () => {
+        const cells = await sheetToPage(userInput, settings);
+        stats = SheetStats.from(cells);
     };
 </script>
 
@@ -46,6 +49,9 @@
             <Settings {settings} />
         </div>
     </div>
+    {#if stats}
+        <Stats {stats} />
+    {/if}
 </div>
 
 <style>

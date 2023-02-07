@@ -106,4 +106,5 @@ export async function sheetToPage(userInput: UserInput, settings: UserSettings) 
     const cells = computeCells(userInput.raw);
     const html = await populateTemplate(userInput, cells, settings);
     exportPdf(html);
+    return cells;
 }

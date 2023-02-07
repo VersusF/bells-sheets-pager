@@ -20,79 +20,81 @@
 </script>
 
 <button class="settings-btn" on:click={toggleSettings}>⚙ Impostazioni</button>
-<div class="settings-form {showSettings ? 'form-show' : 'form-hide'}">
-    <div class="setting-input-div">
-        <label for="input-columns">Numero di colonne</label>
-        <input
-            bind:value={settings.columns}
-            on:change={fixValues}
-            type="number"
-            name="columns"
-            id="input-columns"
-            min="7"
-            max="15"
-            step="1"
-        />
-    </div>
-    <div class="setting-input-div">
-        <label for="input-returnSpacing">Spazio sui ritorni</label>
-        <input
-            bind:checked={settings.returnSpacing}
-            type="checkbox"
-            name="returnSpacing"
-            id="input-returnSpacing"
-        />
-    </div>
-    <div class="setting-input-div">
-        <label for="input-bicolorRows">Colori righe alternati</label>
-        <input
-            bind:checked={settings.bicolorRows}
-            type="checkbox"
-            name="bicolorRows"
-            id="input-bicolorRows"
-        />
-    </div>
-    <div class="setting-input-div">
-        <label for="input-returnColor">Colore ritorni</label>
-        <div class="color-input">
+<div class="settings-form">
+    <div class="settings-form {showSettings ? 'form-show' : 'form-hide'}">
+        <div class="setting-input-div">
+            <label for="input-columns">Numero di colonne</label>
             <input
-                bind:value={settings.returnColor}
-                type="color"
-                name="returnColor"
-                id="input-returnColor"
+                bind:value={settings.columns}
+                on:change={fixValues}
+                type="number"
+                name="columns"
+                id="input-columns"
+                min="7"
+                max="15"
+                step="1"
             />
+        </div>
+        <div class="setting-input-div">
+            <label for="input-returnSpacing">Spazio sui ritorni</label>
+            <input
+                bind:checked={settings.returnSpacing}
+                type="checkbox"
+                name="returnSpacing"
+                id="input-returnSpacing"
+            />
+        </div>
+        <div class="setting-input-div">
+            <label for="input-bicolorRows">Colori righe alternati</label>
+            <input
+                bind:checked={settings.bicolorRows}
+                type="checkbox"
+                name="bicolorRows"
+                id="input-bicolorRows"
+            />
+        </div>
+        <div class="setting-input-div">
+            <label for="input-returnColor">Colore ritorni</label>
             <div class="color-input">
                 <input
-                    bind:checked={settings.returnColorTransparent}
-                    type="checkbox"
-                    name="returnColorTransparent"
-                    id="input-returnColorTransparent"
+                    bind:value={settings.returnColor}
+                    type="color"
+                    name="returnColor"
+                    id="input-returnColor"
                 />
-                <label for="input-returnColorTransparent">Trasparente</label>
+                <div class="color-input">
+                    <input
+                        bind:checked={settings.returnColorTransparent}
+                        type="checkbox"
+                        name="returnColorTransparent"
+                        id="input-returnColorTransparent"
+                    />
+                    <label for="input-returnColorTransparent">Trasparente</label>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="setting-input-div">
-        <label for="input-pauseColor">Colore pause</label>
-        <div class="color-input">
-            <input
-                bind:value={settings.pauseColor}
-                type="color"
-                name="pauseColor"
-                id="input-pauseColor"
-            />
+        <div class="setting-input-div">
+            <label for="input-pauseColor">Colore pause</label>
             <div class="color-input">
                 <input
-                    bind:checked={settings.pauseColorTransparent}
-                    type="checkbox"
-                    name="pauseColorTransparent"
-                    id="input-pauseColorTransparent"
+                    bind:value={settings.pauseColor}
+                    type="color"
+                    name="pauseColor"
+                    id="input-pauseColor"
                 />
-                <label for="input-pauseColorTransparent">Trasparente</label>
+                <div class="color-input">
+                    <input
+                        bind:checked={settings.pauseColorTransparent}
+                        type="checkbox"
+                        name="pauseColorTransparent"
+                        id="input-pauseColorTransparent"
+                    />
+                    <label for="input-pauseColorTransparent">Trasparente</label>
+                </div>
             </div>
         </div>
+        <button class="settings-btn" on:click={resetSettings}>⟲ Ripristina</button>
     </div>
-    <button class="settings-btn" on:click={resetSettings}>⟲ Ripristina</button>
 </div>
 
 <style>
@@ -114,7 +116,7 @@
         width: 100%;
         row-gap: 1em;
         overflow: hidden;
-        transition: max-height 0.25s ease-in-out;
+        transition: margin-top 0.25s ease-in-out;
     }
     .setting-input-div {
         display: flex;
@@ -165,9 +167,9 @@
         flex-wrap: wrap;
     }
     .form-show {
-        max-height: 100%;
+        margin-top: -100%;
     }
     .form-hide {
-        max-height: 0;
+        margin-top: 0;
     }
 </style>
