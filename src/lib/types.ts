@@ -15,13 +15,17 @@ export class UserSettings {
     public bicolorRows: boolean;
     public returnSpacing: boolean;
     public returnColor: string;
+    public returnColorTransparent: boolean;
     public pauseColor: string;
+    public pauseColorTransparent: boolean;
 
     constructor() {
         this.columns = 13;
         this.bicolorRows = true;
         this.returnSpacing = true;
         this.returnColor = "#ff9d9d";
+        this.returnColorTransparent = false;
         this.pauseColor = "#b5ffb5";
+        this.pauseColorTransparent = false;
     }
 }

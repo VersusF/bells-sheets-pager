@@ -22,7 +22,7 @@
 <button class="settings-btn" on:click={toggleSettings}>⚙ Impostazioni</button>
 <div class="settings-form {showSettings ? 'form-show' : 'form-hide'}">
     <div class="setting-input-div">
-        <label for="author">Numero di colonne</label>
+        <label for="input-columns">Numero di colonne</label>
         <input
             bind:value={settings.columns}
             on:change={fixValues}
@@ -35,7 +35,7 @@
         />
     </div>
     <div class="setting-input-div">
-        <label for="author">Spazio sui ritorni</label>
+        <label for="input-returnSpacing">Spazio sui ritorni</label>
         <input
             bind:checked={settings.returnSpacing}
             type="checkbox"
@@ -44,7 +44,7 @@
         />
     </div>
     <div class="setting-input-div">
-        <label for="author">Colori righe alternati</label>
+        <label for="input-bicolorRows">Colori righe alternati</label>
         <input
             bind:checked={settings.bicolorRows}
             type="checkbox"
@@ -53,22 +53,44 @@
         />
     </div>
     <div class="setting-input-div">
-        <label for="author">Colore ritorni</label>
-        <input
-            bind:value={settings.returnColor}
-            type="color"
-            name="returnColor"
-            id="input-returnColor"
-        />
+        <label for="input-returnColor">Colore ritorni</label>
+        <div class="color-input">
+            <input
+                bind:value={settings.returnColor}
+                type="color"
+                name="returnColor"
+                id="input-returnColor"
+            />
+            <div class="color-input">
+                <input
+                    bind:checked={settings.returnColorTransparent}
+                    type="checkbox"
+                    name="returnColorTransparent"
+                    id="input-returnColorTransparent"
+                />
+                <label for="input-returnColorTransparent">Trasparente</label>
+            </div>
+        </div>
     </div>
     <div class="setting-input-div">
-        <label for="author">Colore pause</label>
-        <input
-            bind:value={settings.pauseColor}
-            type="color"
-            name="pauseColor"
-            id="input-pauseColor"
-        />
+        <label for="input-pauseColor">Colore pause</label>
+        <div class="color-input">
+            <input
+                bind:value={settings.pauseColor}
+                type="color"
+                name="pauseColor"
+                id="input-pauseColor"
+            />
+            <div class="color-input">
+                <input
+                    bind:checked={settings.pauseColorTransparent}
+                    type="checkbox"
+                    name="pauseColorTransparent"
+                    id="input-pauseColorTransparent"
+                />
+                <label for="input-pauseColorTransparent">Trasparente</label>
+            </div>
+        </div>
     </div>
     <button class="settings-btn" on:click={resetSettings}>⟲ Ripristina</button>
 </div>
@@ -97,10 +119,50 @@
     .setting-input-div {
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
     input {
         outline: none;
         width: 5em;
+    }
+    input[type="color"] {
+        background: none;
+        border: none;
+        border-radius: 5px;
+    }
+    @supports (-webkit-appearance: none) or (-moz-appearance: none) {
+        input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 18px;
+            margin: 0 5px;
+        }
+        input[type="checkbox"]:after {
+            border: 1px solid white;
+            border-radius: 5px;
+            display: inline-block;
+            height: 18px;
+            width: 18px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            font-weight: bolder;
+            cursor: pointer;
+            content: "";
+            background-color: var(--bg-color);
+        }
+        input[type="checkbox"]:checked::after {
+            content: "✓";
+            background-color: var(--primary-color);
+        }
+    }
+    .color-input {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
     }
     .form-show {
         max-height: 100%;

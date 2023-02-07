@@ -74,7 +74,7 @@
     }
     .settings {
         width: 80%;
-        max-width: 300px;
+        max-width: 500px;
     }
     .title {
         text-align: center;

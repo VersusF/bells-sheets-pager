@@ -48,15 +48,21 @@ async function populateTemplate(userInput: UserInput, cells: string[], settings:
         oddRow = !oddRow;
     };
     let i = 0;
+    const returnStyle = settings.returnColorTransparent
+        ? ""
+        : `style="background-color: ${settings.returnColor}"`;
+    const pauseStyle = settings.pauseColorTransparent
+        ? ""
+        : `style="background-color: ${settings.pauseColor}"`;
     for (const cell of cells) {
         if (i > 0 && i % settings.columns === 0) {
             printRow();
         }
         if (cell === "P") {
-            buffer += `<td style="background-color: ${settings.pauseColor}">P</td>`;
+            buffer += `<td ${pauseStyle}>P</td>`;
         } else if (cell === "") {
             if (settings.returnSpacing) {
-                buffer += `<td style="background-color: ${settings.returnColor}"></td>`;
+                buffer += `<td ${returnStyle}></td>`;
             } else {
                 i--;
             }
