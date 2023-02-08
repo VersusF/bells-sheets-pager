@@ -71,7 +71,8 @@ async function populateTemplate(userInput: UserInput, cells: string[], settings:
                 }
             }
             let style = "";
-            if (cells[i + 1] === "" || cells[i - 1] === "") {
+            const isReturn = cells[i + 1] === "" || cells[i - 1] === "";
+            if (settings.colorReturningBells && isReturn) {
                 style = returnStyle;
             }
             buffer.push(`<td ${colspan} ${style}>${cell}</td>`);
