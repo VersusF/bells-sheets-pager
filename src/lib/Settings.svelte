@@ -167,9 +167,9 @@
         flex-wrap: wrap;
     }
     .form-show {
-        margin-top: -100%;
+        margin-top: 0;
     }
     .form-hide {
-        margin-top: 0;
+        margin-top: -100%;
     }
 </style>
