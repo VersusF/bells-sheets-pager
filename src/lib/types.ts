@@ -28,6 +28,27 @@ export class UserSettings {
         this.pauseColor = "#b5ffb5";
         this.pauseColorTransparent = false;
     }
+
+    public static fromStorage(src: string) {
+        const res = new UserSettings();
+        const obj: UserSettings = JSON.parse(src);
+        const columns = Number(obj.columns);
+        if (columns >= 7 && columns <= 15) {
+            res.columns = columns;
+        }
+        res.bicolorRows = Boolean(obj.bicolorRows);
+        res.returnSpacing = Boolean(obj.returnSpacing);
+        res.returnColorTransparent = Boolean(obj.returnColorTransparent);
+        res.pauseColorTransparent = Boolean(obj.pauseColorTransparent);
+        const colorRE = /^#[0-9a-d]{6}$/;
+        if (obj.returnColor.match(colorRE)) {
+            res.returnColor = obj.returnColor;
+        }
+        if (obj.pauseColor.match(colorRE)) {
+            res.pauseColor = obj.pauseColor;
+        }
+        return res;
+    }
 }
 
 export class SheetStats {

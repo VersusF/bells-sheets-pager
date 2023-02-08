@@ -2,15 +2,24 @@
     import Settings from "$lib/Settings.svelte";
     import Stats from "$lib/Stats.svelte";
     import { SheetStats, UserInput, UserSettings } from "$lib/types";
+    import { onMount } from "svelte";
     import { sheetToPage } from "../lib/pager";
+    const SETTINGS_KEY = "BSP-USER-SETTINGS";
 
     const userInput = new UserInput();
-    const settings = new UserSettings();
+    let settings = new UserSettings();
     let stats: SheetStats;
     const click = async () => {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
         const cells = await sheetToPage(userInput, settings);
         stats = SheetStats.from(cells);
     };
+    onMount(() => {
+        const cached = localStorage.getItem(SETTINGS_KEY);
+        if (cached) {
+            settings = UserSettings.fromStorage(cached);
+        }
+    });
 </script>
 
 <div class="background">
