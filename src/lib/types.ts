@@ -16,6 +16,7 @@ export class UserSettings {
     public returnSpacing: boolean;
     public returnColor: string;
     public returnColorTransparent: boolean;
+    public colorReturningBells: boolean;
     public pauseColor: string;
     public pauseColorTransparent: boolean;
 
@@ -25,6 +26,7 @@ export class UserSettings {
         this.returnSpacing = true;
         this.returnColor = "#ff9d9d";
         this.returnColorTransparent = false;
+        this.colorReturningBells = false;
         this.pauseColor = "#b5ffb5";
         this.pauseColorTransparent = false;
     }
@@ -40,6 +42,7 @@ export class UserSettings {
         res.returnSpacing = Boolean(obj.returnSpacing);
         res.returnColorTransparent = Boolean(obj.returnColorTransparent);
         res.pauseColorTransparent = Boolean(obj.pauseColorTransparent);
+        res.colorReturningBells = Boolean(obj.colorReturningBells);
         const colorRE = /^#[0-9a-d]{6}$/;
         if (obj.returnColor.match(colorRE)) {
             res.returnColor = obj.returnColor;

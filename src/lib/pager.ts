@@ -39,41 +39,47 @@ async function populateTemplate(userInput: UserInput, cells: string[], settings:
     const res = await fetch(base + "/templates/sheet-template.html");
     const template = await res.text();
     let tableCells = "";
-    let buffer = "";
+    let buffer: string[] = [];
     let oddRow = true;
     const printRow = () => {
         const color = oddRow && settings.bicolorRows ? "#eee" : "#fff";
-        tableCells += `<tr style="background-color: ${color};">${buffer}</tr>`;
-        buffer = "";
+        tableCells += `<tr style="background-color: ${color};">${buffer.join("")}</tr>`;
+        buffer = [];
         oddRow = !oddRow;
     };
-    let i = 0;
     const returnStyle = settings.returnColorTransparent
         ? ""
         : `style="background-color: ${settings.returnColor}"`;
     const pauseStyle = settings.pauseColorTransparent
         ? ""
         : `style="background-color: ${settings.pauseColor}"`;
-    for (const cell of cells) {
-        if (i > 0 && i % settings.columns === 0) {
-            printRow();
-        }
+    cells.forEach((cell, i) => {
         if (cell === "P") {
-            buffer += `<td ${pauseStyle}>P</td>`;
+            buffer.push(`<td ${pauseStyle}>P</td>`);
         } else if (cell === "") {
             if (settings.returnSpacing) {
-                buffer += `<td ${returnStyle}></td>`;
-            } else {
-                i--;
+                buffer.push(`<td ${returnStyle}></td>`);
             }
-        } else if (cell.length > 5) {
-            buffer += `<td colspan="2">${cell}</td>`;
-            i++;
         } else {
-            buffer += `<td>${cell}</td>`;
+            let colspan = "";
+            if (cell.length > 5) {
+                colspan = 'colspan="2"';
+                if (buffer.length === settings.columns - 1) {
+                    // Avoid colspan 2 on the last cell of the row
+                    buffer.push("<td></td>");
+                    printRow();
+                }
+            }
+            let style = "";
+            if (cells[i + 1] === "" || cells[i - 1] === "") {
+                style = returnStyle;
+            }
+            buffer.push(`<td ${colspan} ${style}>${cell}</td>`);
         }
-        i++;
-    }
+        if (buffer.length === settings.columns) {
+            printRow();
+        }
+    });
     printRow();
 
     const sheet = template

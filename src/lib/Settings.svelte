@@ -93,6 +93,15 @@
                 </div>
             </div>
         </div>
+        <div class="setting-input-div">
+            <label for="input-colorReturningBells">Colora campane ritorno</label>
+            <input
+                bind:checked={settings.colorReturningBells}
+                type="checkbox"
+                name="colorReturningBells"
+                id="input-colorReturningBells"
+            />
+        </div>
         <button class="settings-btn" on:click={resetSettings}>⟲ Ripristina</button>
     </div>
 </div>
