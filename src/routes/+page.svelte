@@ -23,7 +23,15 @@
 </script>
 
 <div class="background">
-    <h1 class="title">Impaginatore Spartiti Campane a Sistema Veronese</h1>
+    <a href="https://www.campanesistemaveronese.it" class="heading">
+        <img
+            src="https://www.campanesistemaveronese.it/wp-content/uploads/2020/12/cropped-ascsv_white-300x209.png"
+            height="50px"
+            alt="Logo ASCSV"
+        />
+        <h3>Associazione Suonatori di Campane a Sistema Veronese</h3>
+    </a>
+    <h1 class="title">Impaginatore Spartiti</h1>
     <div class="form">
         <div class="bsp-input">
             <label for="title">Titolo</label>
@@ -64,6 +72,13 @@
 </div>
 
 <style>
+    .heading {
+        color: var(--font-color);
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-size: 1em;
+    }
     .background {
         margin: 0;
         width: 100vw;
