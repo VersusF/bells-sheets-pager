@@ -9,6 +9,7 @@
     const userInput = new UserInput();
     let settings = new UserSettings();
     let stats: SheetStats;
+    let headingHidden = false;
     const click = async () => {
         localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
         const cells = await sheetToPage(userInput, settings);
@@ -19,11 +20,17 @@
         if (cached) {
             settings = UserSettings.fromStorage(cached);
         }
+        const urlParams = new URLSearchParams(window.location.search);
+        const headingParam = urlParams.get("heading");
+        headingHidden = headingParam != null && ["false", "none", "0"].includes(headingParam);
     });
 </script>
 
 <div class="background">
-    <a href="https://www.campanesistemaveronese.it" class="heading">
+    <a
+        href="https://www.campanesistemaveronese.it"
+        class="heading {headingHidden ? 'hidden' : null}"
+    >
         <img
             src="https://www.campanesistemaveronese.it/wp-content/uploads/2020/12/cropped-ascsv_white-300x209.png"
             height="50px"
@@ -78,6 +85,9 @@
         align-items: center;
         text-decoration: none;
         font-size: 1em;
+    }
+    .hidden {
+        display: none;
     }
     .background {
         margin: 0;
