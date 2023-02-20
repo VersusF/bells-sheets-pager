@@ -1,22 +1,29 @@
 <script>
     import { UserSettings } from "./types";
+    import { userSettings } from "./store";
+    import { onMount } from "svelte";
 
-    export let settings = new UserSettings();
+    let settings = new UserSettings();
     let showSettings = false;
 
-    const fixValues = () => {
+    const onUpdate = () => {
         if (settings.columns < 7) {
             settings.columns = 7;
         } else if (settings.columns > 15) {
             settings.columns = 15;
         }
+        userSettings.set(settings);
     };
     const toggleSettings = () => {
         showSettings = !showSettings;
     };
     const resetSettings = () => {
         settings = new UserSettings();
+        onUpdate();
     };
+    onMount(() => {
+        settings = $userSettings;
+    });
 </script>
 
 <button class="settings-btn" on:click={toggleSettings}>⚙ Impostazioni</button>
@@ -26,7 +33,7 @@
             <label for="input-columns">Numero di colonne</label>
             <input
                 bind:value={settings.columns}
-                on:change={fixValues}
+                on:change={onUpdate}
                 type="number"
                 name="columns"
                 id="input-columns"
@@ -39,6 +46,7 @@
             <label for="input-returnSpacing">Spazio sui ritorni</label>
             <input
                 bind:checked={settings.returnSpacing}
+                on:change={onUpdate}
                 type="checkbox"
                 name="returnSpacing"
                 id="input-returnSpacing"
@@ -48,6 +56,7 @@
             <label for="input-bicolorRows">Colori righe alternati</label>
             <input
                 bind:checked={settings.bicolorRows}
+                on:change={onUpdate}
                 type="checkbox"
                 name="bicolorRows"
                 id="input-bicolorRows"
@@ -58,6 +67,7 @@
             <div class="color-input">
                 <input
                     bind:value={settings.returnColor}
+                    on:change={onUpdate}
                     type="color"
                     name="returnColor"
                     id="input-returnColor"
@@ -65,6 +75,7 @@
                 <div class="color-input">
                     <input
                         bind:checked={settings.returnColorTransparent}
+                        on:change={onUpdate}
                         type="checkbox"
                         name="returnColorTransparent"
                         id="input-returnColorTransparent"
@@ -78,6 +89,7 @@
             <div class="color-input">
                 <input
                     bind:value={settings.pauseColor}
+                    on:change={onUpdate}
                     type="color"
                     name="pauseColor"
                     id="input-pauseColor"
@@ -85,6 +97,7 @@
                 <div class="color-input">
                     <input
                         bind:checked={settings.pauseColorTransparent}
+                        on:change={onUpdate}
                         type="checkbox"
                         name="pauseColorTransparent"
                         id="input-pauseColorTransparent"
@@ -97,6 +110,7 @@
             <label for="input-colorReturningBells">Colora campane ritorno</label>
             <input
                 bind:checked={settings.colorReturningBells}
+                on:change={onUpdate}
                 type="checkbox"
                 name="colorReturningBells"
                 id="input-colorReturningBells"
@@ -106,6 +120,7 @@
             <label for="input-boldChords">Accordi in grassetto</label>
             <input
                 bind:checked={settings.boldChords}
+                on:change={onUpdate}
                 type="checkbox"
                 name="boldChords"
                 id="input-boldChords"

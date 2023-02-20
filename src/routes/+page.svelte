@@ -4,22 +4,25 @@
     import { SheetStats, UserInput, UserSettings } from "$lib/types";
     import { onMount } from "svelte";
     import { sheetToPage } from "../lib/pager";
+    import { userSettings } from "$lib/store";
     const SETTINGS_KEY = "BSP-USER-SETTINGS";
 
     const userInput = new UserInput();
-    let settings = new UserSettings();
     let stats: SheetStats;
     let headingHidden = false;
     const click = async () => {
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-        const cells = await sheetToPage(userInput, settings);
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify($userSettings));
+        const cells = await sheetToPage(userInput, $userSettings);
         stats = SheetStats.from(cells);
     };
     onMount(() => {
+        // Handle stored settigns
         const cached = localStorage.getItem(SETTINGS_KEY);
         if (cached) {
-            settings = UserSettings.fromStorage(cached);
+            userSettings.set(UserSettings.fromStorage(cached));
         }
+
+        // Handle query params
         const urlParams = new URLSearchParams(window.location.search);
         const headingParam = urlParams.get("heading");
         headingHidden = headingParam != null && ["false", "none", "0"].includes(headingParam);
@@ -70,7 +73,7 @@
         />
         <input on:click={click} type="button" value="Impagina" class="cta-button" />
         <div class="bsp-input settings">
-            <Settings {settings} />
+            <Settings />
         </div>
     </div>
     {#if stats}
