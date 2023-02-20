@@ -102,6 +102,15 @@
                 id="input-colorReturningBells"
             />
         </div>
+        <div class="setting-input-div">
+            <label for="input-boldChords">Accordi in grassetto</label>
+            <input
+                bind:checked={settings.boldChords}
+                type="checkbox"
+                name="boldChords"
+                id="input-boldChords"
+            />
+        </div>
         <button class="settings-btn" on:click={resetSettings}>⟲ Ripristina</button>
     </div>
 </div>

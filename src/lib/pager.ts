@@ -75,7 +75,11 @@ async function populateTemplate(userInput: UserInput, cells: string[], settings:
             if (settings.colorReturningBells && isReturn) {
                 style = returnStyle;
             }
-            buffer.push(`<td ${colspan} ${style}>${cell}</td>`);
+            let content = cell;
+            if (settings.boldChords && cell.length > 2) {
+                content = `<strong>${cell}</strong>`;
+            }
+            buffer.push(`<td ${colspan} ${style}>${content}</td>`);
         }
         if (buffer.length === settings.columns) {
             printRow();

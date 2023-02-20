@@ -19,6 +19,7 @@ export class UserSettings {
     public colorReturningBells: boolean;
     public pauseColor: string;
     public pauseColorTransparent: boolean;
+    public boldChords: boolean;
 
     constructor() {
         this.columns = 13;
@@ -29,6 +30,7 @@ export class UserSettings {
         this.colorReturningBells = false;
         this.pauseColor = "#b5ffb5";
         this.pauseColorTransparent = false;
+        this.boldChords = false;
     }
 
     public static fromStorage(src: string) {
@@ -50,6 +52,7 @@ export class UserSettings {
         if (obj.pauseColor.match(colorRE)) {
             res.pauseColor = obj.pauseColor;
         }
+        res.boldChords = Boolean(obj.boldChords);
         return res;
     }
 }
