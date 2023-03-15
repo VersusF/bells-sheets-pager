@@ -12,6 +12,7 @@ export class UserInput {
 
 export class UserSettings {
     public columns: number;
+    public fontSize: number;
     public bicolorRows: boolean;
     public returnSpacing: boolean;
     public returnColor: string;
@@ -23,6 +24,7 @@ export class UserSettings {
 
     constructor() {
         this.columns = 13;
+        this.fontSize = 14;
         this.bicolorRows = true;
         this.returnSpacing = true;
         this.returnColor = "#ff9d9d";
@@ -35,10 +37,14 @@ export class UserSettings {
 
     public static fromStorage(src: string) {
         const res = new UserSettings();
-        const obj: UserSettings = JSON.parse(src);
+        const obj: Partial<UserSettings> = JSON.parse(src);
         const columns = Number(obj.columns);
         if (columns >= 7 && columns <= 15) {
             res.columns = columns;
+        }
+        const fontSize = Number(obj.fontSize);
+        if (fontSize >= 7 && fontSize <= 20) {
+            res.fontSize = fontSize;
         }
         res.bicolorRows = Boolean(obj.bicolorRows);
         res.returnSpacing = Boolean(obj.returnSpacing);
@@ -46,10 +52,10 @@ export class UserSettings {
         res.pauseColorTransparent = Boolean(obj.pauseColorTransparent);
         res.colorReturningBells = Boolean(obj.colorReturningBells);
         const colorRE = /^#[0-9a-d]{6}$/;
-        if (obj.returnColor.match(colorRE)) {
+        if (obj.returnColor?.match(colorRE)) {
             res.returnColor = obj.returnColor;
         }
-        if (obj.pauseColor.match(colorRE)) {
+        if (obj.pauseColor?.match(colorRE)) {
             res.pauseColor = obj.pauseColor;
         }
         res.boldChords = Boolean(obj.boldChords);
@@ -77,5 +83,25 @@ export class SheetStats {
             }
         }
         return stats;
+    }
+}
+
+type StyleKey = "background-color" | "font-size";
+export class Style {
+    private readonly props: Partial<Record<string, string>> = {};
+
+    public set(key: StyleKey, value: string) {
+        this.props[key] = value;
+    }
+
+    public get html() {
+        if (Object.keys(this.props).length === 0) {
+            return "";
+        } else {
+            const str = Object.keys(this.props)
+                .map((key) => key + ": " + this.props[key])
+                .join(";");
+            return `style="${str}"`;
+        }
     }
 }

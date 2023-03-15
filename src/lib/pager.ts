@@ -1,6 +1,6 @@
 import { base } from "$app/paths";
 import jsPDF from "jspdf";
-import type { UserInput, UserSettings } from "./types";
+import { Style, type UserInput, type UserSettings } from "./types";
 
 /**
  * Converts the user input into an array of cells, each one representing a musical stroke
@@ -47,18 +47,21 @@ async function populateTemplate(userInput: UserInput, cells: string[], settings:
         buffer = [];
         oddRow = !oddRow;
     };
-    const returnStyle = settings.returnColorTransparent
-        ? ""
-        : `style="background-color: ${settings.returnColor}"`;
-    const pauseStyle = settings.pauseColorTransparent
-        ? ""
-        : `style="background-color: ${settings.pauseColor}"`;
+    const returnStyle = new Style();
+    if (!settings.returnColorTransparent) {
+        returnStyle.set("background-color", settings.returnColor);
+    }
+    const pauseStyle = new Style();
+    pauseStyle.set("font-size", settings.fontSize + "pt");
+    if (!settings.pauseColorTransparent) {
+        pauseStyle.set("background-color", settings.pauseColor);
+    }
     cells.forEach((cell, i) => {
         if (cell === "P") {
-            buffer.push(`<td ${pauseStyle}>P</td>`);
+            buffer.push(`<td ${pauseStyle.html}>P</td>`);
         } else if (cell === "") {
             if (settings.returnSpacing) {
-                buffer.push(`<td ${returnStyle}></td>`);
+                buffer.push(`<td ${returnStyle.html}></td>`);
             }
         } else {
             let colspan = "";
@@ -70,16 +73,17 @@ async function populateTemplate(userInput: UserInput, cells: string[], settings:
                     printRow();
                 }
             }
-            let style = "";
+            const style = new Style();
+            style.set("font-size", settings.fontSize + "pt");
             const isReturn = cells[i + 1] === "" || cells[i - 1] === "";
             if (settings.colorReturningBells && isReturn) {
-                style = returnStyle;
+                style.set("background-color", settings.returnColor);
             }
             let content = cell;
             if (settings.boldChords && cell.length > 2) {
                 content = `<strong>${cell}</strong>`;
             }
-            buffer.push(`<td ${colspan} ${style}>${content}</td>`);
+            buffer.push(`<td ${colspan} ${style.html}>${content}</td>`);
         }
         if (buffer.length === settings.columns) {
             printRow();

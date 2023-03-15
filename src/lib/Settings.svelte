@@ -43,6 +43,19 @@
             />
         </div>
         <div class="setting-input-div">
+            <label for="input-fontSize">Dimensione carattere (pt)</label>
+            <input
+                bind:value={settings.fontSize}
+                on:change={onUpdate}
+                type="number"
+                name="fontSize"
+                id="input-fontSize"
+                min="7"
+                max="20"
+                step="1"
+            />
+        </div>
+        <div class="setting-input-div">
             <label for="input-returnSpacing">Spazio sui ritorni</label>
             <input
                 bind:checked={settings.returnSpacing}
