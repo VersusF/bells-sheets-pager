@@ -84,6 +84,10 @@ async function populateTemplate(userInput: UserInput, cells: string[], settings:
                 content = `<strong>${cell}</strong>`;
             }
             buffer.push(`<td ${colspan} ${style.html}>${content}</td>`);
+            // If this is the last cell then buffer is shorter but a new row needs to be printed
+            if (colspan && buffer.length === settings.columns - 1) {
+                printRow();
+            }
         }
         if (buffer.length === settings.columns) {
             printRow();
