@@ -4,7 +4,7 @@
 <head>
     <title>Impaginatore Spartiti</title>
     <meta charset="utf-8" />
-    <link rel="icon" href="/bells-sheets-pager/favicon.png" />
+    <link rel="icon" href="./bells-sheets-pager/favicon.png" />
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <style>
@@ -20,17 +20,18 @@
         }
     </style>
     <meta http-equiv="content-security-policy" content="">
-		<link href="/bells-sheets-pager/internal/immutable/assets/_page-e8443103.css" rel="stylesheet">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/start-8609f00d.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/index-773df3fe.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/singletons-c0e13c9f.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/shared-517e7532.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/preload-helper-41c905a7.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/components/layout.svelte-99a6b9f0.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/modules/pages/_layout.ts-9cbb603b.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/_layout-da46b06b.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/components/pages/_page.svelte-86cf9720.js">
-		<link rel="modulepreload" href="/bells-sheets-pager/internal/immutable/chunks/_page-e5f2faad.js">
+		<link href="./bells-sheets-pager/internal/immutable/assets/_page.e8443103.css" rel="stylesheet">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/entry/start.b23b29fe.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/chunks/index.7ea565e8.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/chunks/singletons.04b0f069.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/chunks/paths.03877d10.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/entry/app.a48bf892.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/chunks/preload-helper.41c905a7.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/entry/layout.svelte.d6bbbc19.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/entry/_layout.ts.984db11e.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/chunks/_layout.da46b06b.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/entry/_page.svelte.f16a547c.js">
+		<link rel="modulepreload" href="./bells-sheets-pager/internal/immutable/chunks/_page.16754014.js">
 </head>
 
 <body data-sveltekit-preload-data="hover" style="margin: 0">
@@ -73,23 +74,32 @@
 </div>
 
 
-		<script type="module" data-sveltekit-hydrate="hzlk7n">
-			import { start } from "/bells-sheets-pager/internal/immutable/start-8609f00d.js";
+			
+			<script>
+				{
+					__sveltekit_1yxxk5x = {
+						env: {},
+						assets: "/bells-sheets-pager",
+						base: new URL("./bells-sheets-pager", location).pathname,
+						element: document.currentScript.parentElement
+					};
 
-			start({
-				env: {},
-				paths: {"assets":"/bells-sheets-pager","base":"/bells-sheets-pager"},
-				target: document.querySelector('[data-sveltekit-hydrate="hzlk7n"]').parentNode,
-				version: "1678877848373",
-				hydrate: {
-					node_ids: [0, 2],
-					data: [null,null],
-					form: null,
-					error: null
+					const data = [null,null];
+
+					Promise.all([
+						import("./bells-sheets-pager/internal/immutable/entry/start.b23b29fe.js"),
+						import("./bells-sheets-pager/internal/immutable/entry/app.a48bf892.js")
+					]).then(([kit, app]) => {
+						kit.start(app, __sveltekit_1yxxk5x.element, {
+							node_ids: [0, 2],
+							data,
+							form: null,
+							error: null
+						});
+					});
 				}
-			});
-		</script>
-	</div>
+			</script>
+		</div>
 </body>
 
 </html>
