@@ -1,7 +1,7 @@
 import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/kit/vite";
 
-const dev = process.argv.includes("dev");
+// const dev = process.argv.includes("dev");
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -10,10 +10,10 @@ const config = {
     preprocess: vitePreprocess(),
 
     kit: {
-        // To use in GitHub page
-        paths: {
-            base: dev ? "" : "/bells-sheets-pager",
-        },
+        // Prefix needed for the GH-page, not anymore
+        // paths: {
+        //     base: dev ? "" : "/bells-sheets-pager",
+        // },
         // If you are not using a .nojekyll file, change your appDir to something not starting with an underscore.
         // For example, instead of '_app', use 'app_', 'internal', etc.
         appDir: "internal",
