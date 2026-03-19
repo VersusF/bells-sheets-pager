@@ -1,6 +1,5 @@
-import { base } from "$app/paths";
 import jsPDF from "jspdf";
-import { Style, type UserInput, type UserSettings } from "./types";
+import type { UserInput, UserSettings } from "./types";
 
 /**
  * Converts the user input into an array of cells, each one representing a musical stroke
@@ -35,95 +34,188 @@ function computeCells(raw: string) {
     return cells;
 }
 
-async function populateTemplate(userInput: UserInput, cells: string[], settings: UserSettings) {
-    const res = await fetch(base + "/templates/sheet-template.html");
-    const template = await res.text();
-    let tableCells = "";
-    let buffer: string[] = [];
-    let oddRow = true;
-    const printRow = () => {
-        const color = oddRow && settings.bicolorRows ? "#eee" : "#fff";
-        tableCells += `<tr style="background-color: ${color};">${buffer.join("")}</tr>`;
-        buffer = [];
-        oddRow = !oddRow;
-    };
-    const returnStyle = new Style();
-    if (!settings.returnColorTransparent) {
-        returnStyle.set("background-color", settings.returnColor);
-    }
-    const pauseStyle = new Style();
-    pauseStyle.set("font-size", settings.fontSize + "pt");
-    if (!settings.pauseColorTransparent) {
-        pauseStyle.set("background-color", settings.pauseColor);
-    }
-    cells.forEach((cell, i) => {
-        if (cell === "P") {
-            buffer.push(`<td ${pauseStyle.html}>P</td>`);
-        } else if (cell === "") {
-            if (settings.returnSpacing) {
-                buffer.push(`<td ${returnStyle.html}></td>`);
-            }
-        } else {
-            let colspan = "";
-            if (cell.length > 5) {
-                colspan = 'colspan="2"';
-                if (buffer.length === settings.columns - 1) {
-                    // Avoid colspan 2 on the last cell of the row
-                    buffer.push("<td></td>");
-                    printRow();
-                }
-            }
-            const style = new Style();
-            style.set("font-size", settings.fontSize + "pt");
-            const isReturn = cells[i + 1] === "" || cells[i - 1] === "";
-            if (settings.colorReturningBells && isReturn) {
-                style.set("background-color", settings.returnColor);
-            }
-            let content = cell;
-            if (settings.boldChords && cell.length > 2) {
-                content = `<strong>${cell}</strong>`;
-            }
-            buffer.push(`<td ${colspan} ${style.html}>${content}</td>`);
-            // If this is the last cell then buffer is shorter but a new row needs to be printed
-            if (colspan && buffer.length === settings.columns - 1) {
-                printRow();
-            }
-        }
-        if (buffer.length === settings.columns) {
-            printRow();
-        }
-    });
-    printRow();
+function toSafePdfFileName(title: string) {
+    const normalized = title
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-_]/g, "")
+        .replace(/-+/g, "-")
+        .replace(/_+/g, "_")
+        .replace(/^[-_]+|[-_]+$/g, "");
 
-    const sheet = template
-        .replace(/%TITLE%/g, userInput.title)
-        .replace("%AUTHOR%", userInput.author)
-        .replace("%ROW_NUMBER%", Math.ceil(cells.length / settings.columns).toString())
-        .replace("%NOTES_COUNT%", cells.filter((c) => c && c != "P").length.toString())
-        .replace("%CELLS%", tableCells);
-
-    return sheet;
+    const baseName = normalized.length > 0 ? normalized : "sheet";
+    return `${baseName}.pdf`;
 }
 
-function exportPdf(html: string) {
+async function generatePdf(userInput: UserInput, cells: string[], settings: UserSettings) {
+    type RgbColor = [number, number, number];
+    type RenderCell = {
+        text: string;
+        span: number;
+        fontSize: number;
+        bold: boolean;
+        fillColor?: RgbColor;
+    };
+
+    const hexToRgb = (hex: string): RgbColor => {
+        const clean = hex.replace("#", "");
+        const value =
+            clean.length === 3
+                ? clean
+                      .split("")
+                      .map((v) => v + v)
+                      .join("")
+                : clean;
+        const num = Number.parseInt(value, 16);
+        return [(num >> 16) & 0xff, (num >> 8) & 0xff, num & 0xff];
+    };
+
+    const countColumns = (row: RenderCell[]) => row.reduce((acc, item) => acc + item.span, 0);
+
+    const rows: RenderCell[][] = [];
+
+    let currentRow: RenderCell[] = [];
+    const flushRow = () => {
+        if (currentRow.length > 0) {
+            rows.push(currentRow);
+            currentRow = [];
+        }
+    };
+
+    const pauseColor = settings.pauseColorTransparent ? undefined : hexToRgb(settings.pauseColor);
+    const returnColor = settings.returnColorTransparent
+        ? undefined
+        : hexToRgb(settings.returnColor);
+
+    cells.forEach((cell, i) => {
+        if (cell === "P") {
+            currentRow.push({
+                text: "P",
+                span: 1,
+                fontSize: settings.fontSize,
+                bold: false,
+                fillColor: pauseColor,
+            });
+        } else if (cell === "") {
+            if (settings.returnSpacing) {
+                currentRow.push({
+                    text: "",
+                    span: 1,
+                    fontSize: settings.fontSize,
+                    bold: false,
+                    fillColor: returnColor,
+                });
+            }
+        } else {
+            const span = cell.length > 5 ? 2 : 1;
+            if (span === 2 && countColumns(currentRow) === settings.columns - 1) {
+                // Avoid placing a two-column cell in the last available single column.
+                currentRow.push({ text: "", span: 1, fontSize: settings.fontSize, bold: false });
+                flushRow();
+            }
+
+            const isReturn = cells[i + 1] === "" || cells[i - 1] === "";
+            let color = undefined;
+            if (settings.colorReturningBells && isReturn) {
+                color = hexToRgb(settings.returnColor);
+            }
+            currentRow.push({
+                text: cell,
+                span,
+                fontSize: settings.fontSize,
+                bold: settings.boldChords && cell.length > 2,
+                fillColor: color,
+            });
+        }
+
+        if (countColumns(currentRow) >= settings.columns) {
+            flushRow();
+        }
+    });
+    flushRow();
+
     const doc = new jsPDF({
-        orientation: "p",
+        orientation: "portrait",
         unit: "mm",
         format: "a4",
     });
-    doc.html(html, {
-        callback: () => {
-            doc.save("sheet.pdf");
-        },
-        width: 211,
-        windowWidth: 800,
-        margin: [15, 10, 10, 10],
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const left = 10;
+    const top = 15;
+    const contentWidth = 190;
+    const contentHeight = 278;
+    const centerX = pageWidth / 2;
+
+    const rowCount = Math.max(1, rows.length);
+    const titleY = top + 10;
+    const subtitleY = top + 18;
+    const tableY = top + 24;
+    const footerY = top + contentHeight - 2;
+    const tableBottom = footerY - 8;
+    const tableHeight = Math.max(20, tableBottom - tableY);
+    const rowHeight = Math.max(7, Math.min(14, tableHeight / rowCount));
+
+    const fitText = (text: string, maxWidth: number, initialSize: number, bold: boolean) => {
+        let size = initialSize;
+        doc.setFont("helvetica", bold ? "bold" : "normal");
+        doc.setFontSize(size);
+        while (size > 7 && doc.getTextWidth(text) > maxWidth) {
+            size -= 0.5;
+            doc.setFontSize(size);
+        }
+        return size;
+    };
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text(userInput.title || " ", centerX, titleY, { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14);
+    doc.text(userInput.author || " ", centerX, subtitleY, { align: "center" });
+
+    const evenColor: RgbColor = [238, 238, 238];
+    const oddColor: RgbColor = [255, 255, 255];
+    rows.forEach((row, rowIndex) => {
+        const defaultRowColor = settings.bicolorRows && rowIndex % 2 === 0 ? evenColor : oddColor;
+        let x = left;
+        const y = tableY + rowIndex * rowHeight;
+
+        row.forEach((item) => {
+            const cellWidth = (contentWidth / settings.columns) * item.span;
+            const fill = item.fillColor ?? defaultRowColor;
+            doc.setFillColor(fill[0], fill[1], fill[2]);
+            doc.rect(x, y, cellWidth, rowHeight, "F");
+
+            if (item.text) {
+                const fontSize = fitText(item.text, cellWidth - 2, item.fontSize, item.bold);
+                doc.setFont("helvetica", item.bold ? "bold" : "normal");
+                doc.setFontSize(fontSize);
+                doc.text(item.text, x + cellWidth / 2, y + rowHeight / 2 + fontSize * 0.16, {
+                    align: "center",
+                });
+            }
+
+            x += cellWidth;
+        });
     });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`Totale battute: ${cells.filter((c) => c && c !== "P").length}`, centerX, footerY, {
+        align: "center",
+    });
+
+    doc.save(toSafePdfFileName(userInput.title));
 }
 
 export async function sheetToPage(userInput: UserInput, settings: UserSettings) {
     const cells = computeCells(userInput.raw);
-    const html = await populateTemplate(userInput, cells, settings);
-    exportPdf(html);
+    await generatePdf(userInput, cells, settings);
     return cells;
 }
